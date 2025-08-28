@@ -88,6 +88,14 @@ service Chorus {
   rpc GetConsistencyCheckReport(ConsistencyCheckRequest) returns (GetConsistencyCheckReportResponse);
   rpc GetConsistencyCheckReportEntries(GetConsistencyCheckReportEntriesRequest) returns (GetConsistencyCheckReportEntriesResponse);
   rpc DeleteConsistencyCheckReport(ConsistencyCheckRequest) returns (google.protobuf.Empty);
+
+  // Storage management (experimental)
+  // Adds a new storage configuration at runtime
+  rpc AddStorage(UpsertStorageRequest) returns (google.protobuf.Empty);
+  // Updates an existing storage configuration at runtime
+  rpc UpdateStorage(UpsertStorageRequest) returns (google.protobuf.Empty);
+  // Deletes a storage configuration by name
+  rpc DeleteStorage(DeleteStorageRequest) returns (google.protobuf.Empty);
 }
 
 message MigrateLocation {
@@ -422,4 +430,30 @@ message GetBucketSwitchStatusResponse {
 
 message ListSwitchResponse {
   repeated GetBucketSwitchStatusResponse switches = 1;
+}
+
+// Experimental storage management messages
+message RateLimitConfig {
+  bool enable = 1;
+  uint32 rpm = 2;
+}
+
+message UpsertStorageRequest {
+  // unique storage name
+  string name = 1;
+  bool is_main = 2;
+  string address = 3;
+  Storage.Provider provider = 4;
+  // credentials: access key (public, aka username)
+  repeated Credential credentials = 5;
+  bool is_secure = 6;
+  string default_region = 7;
+  // durations in Go duration format (e.g., 10s, 1m)
+  string health_check_interval = 8;
+  string http_timeout = 9;
+  RateLimitConfig rate_limit = 10;
+}
+
+message DeleteStorageRequest {
+  string name = 1;
 }

@@ -2398,6 +2398,222 @@ func (x *ListSwitchResponse) GetSwitches() []*GetBucketSwitchStatusResponse {
 	return nil
 }
 
+// Experimental storage management messages
+type RateLimitConfig struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Enable        bool                   `protobuf:"varint,1,opt,name=enable,proto3" json:"enable,omitempty"`
+	Rpm           uint32                 `protobuf:"varint,2,opt,name=rpm,proto3" json:"rpm,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RateLimitConfig) Reset() {
+	*x = RateLimitConfig{}
+	mi := &file_chorus_chorus_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RateLimitConfig) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RateLimitConfig) ProtoMessage() {}
+
+func (x *RateLimitConfig) ProtoReflect() protoreflect.Message {
+	mi := &file_chorus_chorus_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RateLimitConfig.ProtoReflect.Descriptor instead.
+func (*RateLimitConfig) Descriptor() ([]byte, []int) {
+	return file_chorus_chorus_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *RateLimitConfig) GetEnable() bool {
+	if x != nil {
+		return x.Enable
+	}
+	return false
+}
+
+func (x *RateLimitConfig) GetRpm() uint32 {
+	if x != nil {
+		return x.Rpm
+	}
+	return 0
+}
+
+type UpsertStorageRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// unique storage name
+	Name     string           `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	IsMain   bool             `protobuf:"varint,2,opt,name=is_main,json=isMain,proto3" json:"is_main,omitempty"`
+	Address  string           `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
+	Provider Storage_Provider `protobuf:"varint,4,opt,name=provider,proto3,enum=chorus.Storage_Provider" json:"provider,omitempty"`
+	// credentials: access key (public, aka username)
+	Credentials   []*Credential `protobuf:"bytes,5,rep,name=credentials,proto3" json:"credentials,omitempty"`
+	IsSecure      bool          `protobuf:"varint,6,opt,name=is_secure,json=isSecure,proto3" json:"is_secure,omitempty"`
+	DefaultRegion string        `protobuf:"bytes,7,opt,name=default_region,json=defaultRegion,proto3" json:"default_region,omitempty"`
+	// durations in Go duration format (e.g., 10s, 1m)
+	HealthCheckInterval string           `protobuf:"bytes,8,opt,name=health_check_interval,json=healthCheckInterval,proto3" json:"health_check_interval,omitempty"`
+	HttpTimeout         string           `protobuf:"bytes,9,opt,name=http_timeout,json=httpTimeout,proto3" json:"http_timeout,omitempty"`
+	RateLimit           *RateLimitConfig `protobuf:"bytes,10,opt,name=rate_limit,json=rateLimit,proto3" json:"rate_limit,omitempty"`
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
+}
+
+func (x *UpsertStorageRequest) Reset() {
+	*x = UpsertStorageRequest{}
+	mi := &file_chorus_chorus_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpsertStorageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpsertStorageRequest) ProtoMessage() {}
+
+func (x *UpsertStorageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_chorus_chorus_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpsertStorageRequest.ProtoReflect.Descriptor instead.
+func (*UpsertStorageRequest) Descriptor() ([]byte, []int) {
+	return file_chorus_chorus_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *UpsertStorageRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UpsertStorageRequest) GetIsMain() bool {
+	if x != nil {
+		return x.IsMain
+	}
+	return false
+}
+
+func (x *UpsertStorageRequest) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *UpsertStorageRequest) GetProvider() Storage_Provider {
+	if x != nil {
+		return x.Provider
+	}
+	return Storage_Other
+}
+
+func (x *UpsertStorageRequest) GetCredentials() []*Credential {
+	if x != nil {
+		return x.Credentials
+	}
+	return nil
+}
+
+func (x *UpsertStorageRequest) GetIsSecure() bool {
+	if x != nil {
+		return x.IsSecure
+	}
+	return false
+}
+
+func (x *UpsertStorageRequest) GetDefaultRegion() string {
+	if x != nil {
+		return x.DefaultRegion
+	}
+	return ""
+}
+
+func (x *UpsertStorageRequest) GetHealthCheckInterval() string {
+	if x != nil {
+		return x.HealthCheckInterval
+	}
+	return ""
+}
+
+func (x *UpsertStorageRequest) GetHttpTimeout() string {
+	if x != nil {
+		return x.HttpTimeout
+	}
+	return ""
+}
+
+func (x *UpsertStorageRequest) GetRateLimit() *RateLimitConfig {
+	if x != nil {
+		return x.RateLimit
+	}
+	return nil
+}
+
+type DeleteStorageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteStorageRequest) Reset() {
+	*x = DeleteStorageRequest{}
+	mi := &file_chorus_chorus_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteStorageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteStorageRequest) ProtoMessage() {}
+
+func (x *DeleteStorageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_chorus_chorus_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteStorageRequest.ProtoReflect.Descriptor instead.
+func (*DeleteStorageRequest) Descriptor() ([]byte, []int) {
+	return file_chorus_chorus_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *DeleteStorageRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
 var File_chorus_chorus_proto protoreflect.FileDescriptor
 
 const file_chorus_chorus_proto_rawDesc = "" +
@@ -2612,7 +2828,25 @@ const file_chorus_chorus_proto_rawDesc = "" +
 	"\n" +
 	"\b_done_at\"W\n" +
 	"\x12ListSwitchResponse\x12A\n" +
-	"\bswitches\x18\x01 \x03(\v2%.chorus.GetBucketSwitchStatusResponseR\bswitches2\xf7\x10\n" +
+	"\bswitches\x18\x01 \x03(\v2%.chorus.GetBucketSwitchStatusResponseR\bswitches\";\n" +
+	"\x0fRateLimitConfig\x12\x16\n" +
+	"\x06enable\x18\x01 \x01(\bR\x06enable\x12\x10\n" +
+	"\x03rpm\x18\x02 \x01(\rR\x03rpm\"\x9c\x03\n" +
+	"\x14UpsertStorageRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x17\n" +
+	"\ais_main\x18\x02 \x01(\bR\x06isMain\x12\x18\n" +
+	"\aaddress\x18\x03 \x01(\tR\aaddress\x124\n" +
+	"\bprovider\x18\x04 \x01(\x0e2\x18.chorus.Storage.ProviderR\bprovider\x124\n" +
+	"\vcredentials\x18\x05 \x03(\v2\x12.chorus.CredentialR\vcredentials\x12\x1b\n" +
+	"\tis_secure\x18\x06 \x01(\bR\bisSecure\x12%\n" +
+	"\x0edefault_region\x18\a \x01(\tR\rdefaultRegion\x122\n" +
+	"\x15health_check_interval\x18\b \x01(\tR\x13healthCheckInterval\x12!\n" +
+	"\fhttp_timeout\x18\t \x01(\tR\vhttpTimeout\x126\n" +
+	"\n" +
+	"rate_limit\x18\n" +
+	" \x01(\v2\x17.chorus.RateLimitConfigR\trateLimit\"*\n" +
+	"\x14DeleteStorageRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name2\xc9\x12\n" +
 	"\x06Chorus\x12F\n" +
 	"\rGetAppVersion\x12\x16.google.protobuf.Empty\x1a\x1d.chorus.GetAppVersionResponse\x12B\n" +
 	"\vGetStorages\x12\x16.google.protobuf.Empty\x1a\x1b.chorus.GetStoragesResponse\x12R\n" +
@@ -2639,7 +2873,11 @@ const file_chorus_chorus_proto_rawDesc = "" +
 	"\x15ListConsistencyChecks\x12\x16.google.protobuf.Empty\x1a%.chorus.ListConsistencyChecksResponse\x12g\n" +
 	"\x19GetConsistencyCheckReport\x12\x1f.chorus.ConsistencyCheckRequest\x1a).chorus.GetConsistencyCheckReportResponse\x12\x85\x01\n" +
 	" GetConsistencyCheckReportEntries\x12/.chorus.GetConsistencyCheckReportEntriesRequest\x1a0.chorus.GetConsistencyCheckReportEntriesResponse\x12W\n" +
-	"\x1cDeleteConsistencyCheckReport\x12\x1f.chorus.ConsistencyCheckRequest\x1a\x16.google.protobuf.EmptyB)Z'github.com/clyso/chorus/proto/chorus;pbb\x06proto3"
+	"\x1cDeleteConsistencyCheckReport\x12\x1f.chorus.ConsistencyCheckRequest\x1a\x16.google.protobuf.Empty\x12B\n" +
+	"\n" +
+	"AddStorage\x12\x1c.chorus.UpsertStorageRequest\x1a\x16.google.protobuf.Empty\x12E\n" +
+	"\rUpdateStorage\x12\x1c.chorus.UpsertStorageRequest\x1a\x16.google.protobuf.Empty\x12E\n" +
+	"\rDeleteStorage\x12\x1c.chorus.DeleteStorageRequest\x1a\x16.google.protobuf.EmptyB)Z'github.com/clyso/chorus/proto/chorus;pbb\x06proto3"
 
 var (
 	file_chorus_chorus_proto_rawDescOnce sync.Once
@@ -2654,7 +2892,7 @@ func file_chorus_chorus_proto_rawDescGZIP() []byte {
 }
 
 var file_chorus_chorus_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_chorus_chorus_proto_msgTypes = make([]protoimpl.MessageInfo, 33)
+var file_chorus_chorus_proto_msgTypes = make([]protoimpl.MessageInfo, 36)
 var file_chorus_chorus_proto_goTypes = []any{
 	(Storage_Provider)(0),                            // 0: chorus.Storage.Provider
 	(GetBucketSwitchStatusResponse_Status)(0),        // 1: chorus.GetBucketSwitchStatusResponse.Status
@@ -2691,9 +2929,12 @@ var file_chorus_chorus_proto_goTypes = []any{
 	(*SwitchDowntimeOpts)(nil),                       // 32: chorus.SwitchDowntimeOpts
 	(*GetBucketSwitchStatusResponse)(nil),            // 33: chorus.GetBucketSwitchStatusResponse
 	(*ListSwitchResponse)(nil),                       // 34: chorus.ListSwitchResponse
-	(*timestamppb.Timestamp)(nil),                    // 35: google.protobuf.Timestamp
-	(*durationpb.Duration)(nil),                      // 36: google.protobuf.Duration
-	(*emptypb.Empty)(nil),                            // 37: google.protobuf.Empty
+	(*RateLimitConfig)(nil),                          // 35: chorus.RateLimitConfig
+	(*UpsertStorageRequest)(nil),                     // 36: chorus.UpsertStorageRequest
+	(*DeleteStorageRequest)(nil),                     // 37: chorus.DeleteStorageRequest
+	(*timestamppb.Timestamp)(nil),                    // 38: google.protobuf.Timestamp
+	(*durationpb.Duration)(nil),                      // 39: google.protobuf.Duration
+	(*emptypb.Empty)(nil),                            // 40: google.protobuf.Empty
 }
 var file_chorus_chorus_proto_depIdxs = []int32{
 	2,  // 0: chorus.ConsistencyCheckRequest.locations:type_name -> chorus.MigrateLocation
@@ -2708,83 +2949,92 @@ var file_chorus_chorus_proto_depIdxs = []int32{
 	14, // 9: chorus.Storage.credentials:type_name -> chorus.Credential
 	14, // 10: chorus.GetProxyCredentialsResponse.credentials:type_name -> chorus.Credential
 	21, // 11: chorus.ListReplicationsResponse.replications:type_name -> chorus.Replication
-	35, // 12: chorus.Replication.created_at:type_name -> google.protobuf.Timestamp
-	35, // 13: chorus.Replication.last_emitted_at:type_name -> google.protobuf.Timestamp
-	35, // 14: chorus.Replication.last_processed_at:type_name -> google.protobuf.Timestamp
-	35, // 15: chorus.Replication.init_done_at:type_name -> google.protobuf.Timestamp
-	35, // 16: chorus.Replication.archived_at:type_name -> google.protobuf.Timestamp
+	38, // 12: chorus.Replication.created_at:type_name -> google.protobuf.Timestamp
+	38, // 13: chorus.Replication.last_emitted_at:type_name -> google.protobuf.Timestamp
+	38, // 14: chorus.Replication.last_processed_at:type_name -> google.protobuf.Timestamp
+	38, // 15: chorus.Replication.init_done_at:type_name -> google.protobuf.Timestamp
+	38, // 16: chorus.Replication.archived_at:type_name -> google.protobuf.Timestamp
 	24, // 17: chorus.ListUserReplicationsResponse.replications:type_name -> chorus.UserReplication
 	29, // 18: chorus.GetAgentsResponse.agents:type_name -> chorus.Agent
 	22, // 19: chorus.SwitchBucketZeroDowntimeRequest.replication_id:type_name -> chorus.ReplicationRequest
-	36, // 20: chorus.SwitchBucketZeroDowntimeRequest.multipart_ttl:type_name -> google.protobuf.Duration
+	39, // 20: chorus.SwitchBucketZeroDowntimeRequest.multipart_ttl:type_name -> google.protobuf.Duration
 	22, // 21: chorus.SwitchBucketRequest.replication_id:type_name -> chorus.ReplicationRequest
 	32, // 22: chorus.SwitchBucketRequest.downtime_opts:type_name -> chorus.SwitchDowntimeOpts
-	35, // 23: chorus.SwitchDowntimeOpts.start_at:type_name -> google.protobuf.Timestamp
-	36, // 24: chorus.SwitchDowntimeOpts.max_duration:type_name -> google.protobuf.Duration
+	38, // 23: chorus.SwitchDowntimeOpts.start_at:type_name -> google.protobuf.Timestamp
+	39, // 24: chorus.SwitchDowntimeOpts.max_duration:type_name -> google.protobuf.Duration
 	1,  // 25: chorus.GetBucketSwitchStatusResponse.last_status:type_name -> chorus.GetBucketSwitchStatusResponse.Status
-	36, // 26: chorus.GetBucketSwitchStatusResponse.multipart_ttl:type_name -> google.protobuf.Duration
+	39, // 26: chorus.GetBucketSwitchStatusResponse.multipart_ttl:type_name -> google.protobuf.Duration
 	32, // 27: chorus.GetBucketSwitchStatusResponse.downtime_opts:type_name -> chorus.SwitchDowntimeOpts
-	35, // 28: chorus.GetBucketSwitchStatusResponse.last_started_at:type_name -> google.protobuf.Timestamp
-	35, // 29: chorus.GetBucketSwitchStatusResponse.done_at:type_name -> google.protobuf.Timestamp
+	38, // 28: chorus.GetBucketSwitchStatusResponse.last_started_at:type_name -> google.protobuf.Timestamp
+	38, // 29: chorus.GetBucketSwitchStatusResponse.done_at:type_name -> google.protobuf.Timestamp
 	22, // 30: chorus.GetBucketSwitchStatusResponse.replication_id:type_name -> chorus.ReplicationRequest
 	33, // 31: chorus.ListSwitchResponse.switches:type_name -> chorus.GetBucketSwitchStatusResponse
-	37, // 32: chorus.Chorus.GetAppVersion:input_type -> google.protobuf.Empty
-	37, // 33: chorus.Chorus.GetStorages:input_type -> google.protobuf.Empty
-	37, // 34: chorus.Chorus.GetProxyCredentials:input_type -> google.protobuf.Empty
-	18, // 35: chorus.Chorus.ListBucketsForReplication:input_type -> chorus.ListBucketsForReplicationRequest
-	16, // 36: chorus.Chorus.AddReplication:input_type -> chorus.AddReplicationRequest
-	37, // 37: chorus.Chorus.ListReplications:input_type -> google.protobuf.Empty
-	37, // 38: chorus.Chorus.ListUserReplications:input_type -> google.protobuf.Empty
-	22, // 39: chorus.Chorus.StreamBucketReplication:input_type -> chorus.ReplicationRequest
-	22, // 40: chorus.Chorus.PauseReplication:input_type -> chorus.ReplicationRequest
-	22, // 41: chorus.Chorus.ResumeReplication:input_type -> chorus.ReplicationRequest
-	22, // 42: chorus.Chorus.DeleteReplication:input_type -> chorus.ReplicationRequest
-	25, // 43: chorus.Chorus.DeleteUserReplication:input_type -> chorus.DeleteUserReplicationRequest
-	30, // 44: chorus.Chorus.SwitchBucketZeroDowntime:input_type -> chorus.SwitchBucketZeroDowntimeRequest
-	31, // 45: chorus.Chorus.SwitchBucket:input_type -> chorus.SwitchBucketRequest
-	22, // 46: chorus.Chorus.DeleteBucketSwitch:input_type -> chorus.ReplicationRequest
-	22, // 47: chorus.Chorus.GetBucketSwitchStatus:input_type -> chorus.ReplicationRequest
-	37, // 48: chorus.Chorus.ListReplicationSwitches:input_type -> google.protobuf.Empty
-	26, // 49: chorus.Chorus.CompareBucket:input_type -> chorus.CompareBucketRequest
-	37, // 50: chorus.Chorus.GetAgents:input_type -> google.protobuf.Empty
-	17, // 51: chorus.Chorus.AddBucketReplication:input_type -> chorus.AddBucketReplicationRequest
-	22, // 52: chorus.Chorus.GetReplication:input_type -> chorus.ReplicationRequest
-	3,  // 53: chorus.Chorus.StartConsistencyCheck:input_type -> chorus.ConsistencyCheckRequest
-	37, // 54: chorus.Chorus.ListConsistencyChecks:input_type -> google.protobuf.Empty
-	3,  // 55: chorus.Chorus.GetConsistencyCheckReport:input_type -> chorus.ConsistencyCheckRequest
-	9,  // 56: chorus.Chorus.GetConsistencyCheckReportEntries:input_type -> chorus.GetConsistencyCheckReportEntriesRequest
-	3,  // 57: chorus.Chorus.DeleteConsistencyCheckReport:input_type -> chorus.ConsistencyCheckRequest
-	11, // 58: chorus.Chorus.GetAppVersion:output_type -> chorus.GetAppVersionResponse
-	12, // 59: chorus.Chorus.GetStorages:output_type -> chorus.GetStoragesResponse
-	15, // 60: chorus.Chorus.GetProxyCredentials:output_type -> chorus.GetProxyCredentialsResponse
-	19, // 61: chorus.Chorus.ListBucketsForReplication:output_type -> chorus.ListBucketsForReplicationResponse
-	37, // 62: chorus.Chorus.AddReplication:output_type -> google.protobuf.Empty
-	20, // 63: chorus.Chorus.ListReplications:output_type -> chorus.ListReplicationsResponse
-	23, // 64: chorus.Chorus.ListUserReplications:output_type -> chorus.ListUserReplicationsResponse
-	21, // 65: chorus.Chorus.StreamBucketReplication:output_type -> chorus.Replication
-	37, // 66: chorus.Chorus.PauseReplication:output_type -> google.protobuf.Empty
-	37, // 67: chorus.Chorus.ResumeReplication:output_type -> google.protobuf.Empty
-	37, // 68: chorus.Chorus.DeleteReplication:output_type -> google.protobuf.Empty
-	37, // 69: chorus.Chorus.DeleteUserReplication:output_type -> google.protobuf.Empty
-	37, // 70: chorus.Chorus.SwitchBucketZeroDowntime:output_type -> google.protobuf.Empty
-	37, // 71: chorus.Chorus.SwitchBucket:output_type -> google.protobuf.Empty
-	37, // 72: chorus.Chorus.DeleteBucketSwitch:output_type -> google.protobuf.Empty
-	33, // 73: chorus.Chorus.GetBucketSwitchStatus:output_type -> chorus.GetBucketSwitchStatusResponse
-	34, // 74: chorus.Chorus.ListReplicationSwitches:output_type -> chorus.ListSwitchResponse
-	27, // 75: chorus.Chorus.CompareBucket:output_type -> chorus.CompareBucketResponse
-	28, // 76: chorus.Chorus.GetAgents:output_type -> chorus.GetAgentsResponse
-	37, // 77: chorus.Chorus.AddBucketReplication:output_type -> google.protobuf.Empty
-	21, // 78: chorus.Chorus.GetReplication:output_type -> chorus.Replication
-	37, // 79: chorus.Chorus.StartConsistencyCheck:output_type -> google.protobuf.Empty
-	5,  // 80: chorus.Chorus.ListConsistencyChecks:output_type -> chorus.ListConsistencyChecksResponse
-	7,  // 81: chorus.Chorus.GetConsistencyCheckReport:output_type -> chorus.GetConsistencyCheckReportResponse
-	10, // 82: chorus.Chorus.GetConsistencyCheckReportEntries:output_type -> chorus.GetConsistencyCheckReportEntriesResponse
-	37, // 83: chorus.Chorus.DeleteConsistencyCheckReport:output_type -> google.protobuf.Empty
-	58, // [58:84] is the sub-list for method output_type
-	32, // [32:58] is the sub-list for method input_type
-	32, // [32:32] is the sub-list for extension type_name
-	32, // [32:32] is the sub-list for extension extendee
-	0,  // [0:32] is the sub-list for field type_name
+	0,  // 32: chorus.UpsertStorageRequest.provider:type_name -> chorus.Storage.Provider
+	14, // 33: chorus.UpsertStorageRequest.credentials:type_name -> chorus.Credential
+	35, // 34: chorus.UpsertStorageRequest.rate_limit:type_name -> chorus.RateLimitConfig
+	40, // 35: chorus.Chorus.GetAppVersion:input_type -> google.protobuf.Empty
+	40, // 36: chorus.Chorus.GetStorages:input_type -> google.protobuf.Empty
+	40, // 37: chorus.Chorus.GetProxyCredentials:input_type -> google.protobuf.Empty
+	18, // 38: chorus.Chorus.ListBucketsForReplication:input_type -> chorus.ListBucketsForReplicationRequest
+	16, // 39: chorus.Chorus.AddReplication:input_type -> chorus.AddReplicationRequest
+	40, // 40: chorus.Chorus.ListReplications:input_type -> google.protobuf.Empty
+	40, // 41: chorus.Chorus.ListUserReplications:input_type -> google.protobuf.Empty
+	22, // 42: chorus.Chorus.StreamBucketReplication:input_type -> chorus.ReplicationRequest
+	22, // 43: chorus.Chorus.PauseReplication:input_type -> chorus.ReplicationRequest
+	22, // 44: chorus.Chorus.ResumeReplication:input_type -> chorus.ReplicationRequest
+	22, // 45: chorus.Chorus.DeleteReplication:input_type -> chorus.ReplicationRequest
+	25, // 46: chorus.Chorus.DeleteUserReplication:input_type -> chorus.DeleteUserReplicationRequest
+	30, // 47: chorus.Chorus.SwitchBucketZeroDowntime:input_type -> chorus.SwitchBucketZeroDowntimeRequest
+	31, // 48: chorus.Chorus.SwitchBucket:input_type -> chorus.SwitchBucketRequest
+	22, // 49: chorus.Chorus.DeleteBucketSwitch:input_type -> chorus.ReplicationRequest
+	22, // 50: chorus.Chorus.GetBucketSwitchStatus:input_type -> chorus.ReplicationRequest
+	40, // 51: chorus.Chorus.ListReplicationSwitches:input_type -> google.protobuf.Empty
+	26, // 52: chorus.Chorus.CompareBucket:input_type -> chorus.CompareBucketRequest
+	40, // 53: chorus.Chorus.GetAgents:input_type -> google.protobuf.Empty
+	17, // 54: chorus.Chorus.AddBucketReplication:input_type -> chorus.AddBucketReplicationRequest
+	22, // 55: chorus.Chorus.GetReplication:input_type -> chorus.ReplicationRequest
+	3,  // 56: chorus.Chorus.StartConsistencyCheck:input_type -> chorus.ConsistencyCheckRequest
+	40, // 57: chorus.Chorus.ListConsistencyChecks:input_type -> google.protobuf.Empty
+	3,  // 58: chorus.Chorus.GetConsistencyCheckReport:input_type -> chorus.ConsistencyCheckRequest
+	9,  // 59: chorus.Chorus.GetConsistencyCheckReportEntries:input_type -> chorus.GetConsistencyCheckReportEntriesRequest
+	3,  // 60: chorus.Chorus.DeleteConsistencyCheckReport:input_type -> chorus.ConsistencyCheckRequest
+	36, // 61: chorus.Chorus.AddStorage:input_type -> chorus.UpsertStorageRequest
+	36, // 62: chorus.Chorus.UpdateStorage:input_type -> chorus.UpsertStorageRequest
+	37, // 63: chorus.Chorus.DeleteStorage:input_type -> chorus.DeleteStorageRequest
+	11, // 64: chorus.Chorus.GetAppVersion:output_type -> chorus.GetAppVersionResponse
+	12, // 65: chorus.Chorus.GetStorages:output_type -> chorus.GetStoragesResponse
+	15, // 66: chorus.Chorus.GetProxyCredentials:output_type -> chorus.GetProxyCredentialsResponse
+	19, // 67: chorus.Chorus.ListBucketsForReplication:output_type -> chorus.ListBucketsForReplicationResponse
+	40, // 68: chorus.Chorus.AddReplication:output_type -> google.protobuf.Empty
+	20, // 69: chorus.Chorus.ListReplications:output_type -> chorus.ListReplicationsResponse
+	23, // 70: chorus.Chorus.ListUserReplications:output_type -> chorus.ListUserReplicationsResponse
+	21, // 71: chorus.Chorus.StreamBucketReplication:output_type -> chorus.Replication
+	40, // 72: chorus.Chorus.PauseReplication:output_type -> google.protobuf.Empty
+	40, // 73: chorus.Chorus.ResumeReplication:output_type -> google.protobuf.Empty
+	40, // 74: chorus.Chorus.DeleteReplication:output_type -> google.protobuf.Empty
+	40, // 75: chorus.Chorus.DeleteUserReplication:output_type -> google.protobuf.Empty
+	40, // 76: chorus.Chorus.SwitchBucketZeroDowntime:output_type -> google.protobuf.Empty
+	40, // 77: chorus.Chorus.SwitchBucket:output_type -> google.protobuf.Empty
+	40, // 78: chorus.Chorus.DeleteBucketSwitch:output_type -> google.protobuf.Empty
+	33, // 79: chorus.Chorus.GetBucketSwitchStatus:output_type -> chorus.GetBucketSwitchStatusResponse
+	34, // 80: chorus.Chorus.ListReplicationSwitches:output_type -> chorus.ListSwitchResponse
+	27, // 81: chorus.Chorus.CompareBucket:output_type -> chorus.CompareBucketResponse
+	28, // 82: chorus.Chorus.GetAgents:output_type -> chorus.GetAgentsResponse
+	40, // 83: chorus.Chorus.AddBucketReplication:output_type -> google.protobuf.Empty
+	21, // 84: chorus.Chorus.GetReplication:output_type -> chorus.Replication
+	40, // 85: chorus.Chorus.StartConsistencyCheck:output_type -> google.protobuf.Empty
+	5,  // 86: chorus.Chorus.ListConsistencyChecks:output_type -> chorus.ListConsistencyChecksResponse
+	7,  // 87: chorus.Chorus.GetConsistencyCheckReport:output_type -> chorus.GetConsistencyCheckReportResponse
+	10, // 88: chorus.Chorus.GetConsistencyCheckReportEntries:output_type -> chorus.GetConsistencyCheckReportEntriesResponse
+	40, // 89: chorus.Chorus.DeleteConsistencyCheckReport:output_type -> google.protobuf.Empty
+	40, // 90: chorus.Chorus.AddStorage:output_type -> google.protobuf.Empty
+	40, // 91: chorus.Chorus.UpdateStorage:output_type -> google.protobuf.Empty
+	40, // 92: chorus.Chorus.DeleteStorage:output_type -> google.protobuf.Empty
+	64, // [64:93] is the sub-list for method output_type
+	35, // [35:64] is the sub-list for method input_type
+	35, // [35:35] is the sub-list for extension type_name
+	35, // [35:35] is the sub-list for extension extendee
+	0,  // [0:35] is the sub-list for field type_name
 }
 
 func init() { file_chorus_chorus_proto_init() }
@@ -2805,7 +3055,7 @@ func file_chorus_chorus_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_chorus_chorus_proto_rawDesc), len(file_chorus_chorus_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   33,
+			NumMessages:   36,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

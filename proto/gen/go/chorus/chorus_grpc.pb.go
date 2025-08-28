@@ -46,6 +46,9 @@ const (
 	Chorus_GetConsistencyCheckReport_FullMethodName        = "/chorus.Chorus/GetConsistencyCheckReport"
 	Chorus_GetConsistencyCheckReportEntries_FullMethodName = "/chorus.Chorus/GetConsistencyCheckReportEntries"
 	Chorus_DeleteConsistencyCheckReport_FullMethodName     = "/chorus.Chorus/DeleteConsistencyCheckReport"
+	Chorus_AddStorage_FullMethodName                       = "/chorus.Chorus/AddStorage"
+	Chorus_UpdateStorage_FullMethodName                    = "/chorus.Chorus/UpdateStorage"
+	Chorus_DeleteStorage_FullMethodName                    = "/chorus.Chorus/DeleteStorage"
 )
 
 // ChorusClient is the client API for Chorus service.
@@ -117,6 +120,13 @@ type ChorusClient interface {
 	GetConsistencyCheckReport(ctx context.Context, in *ConsistencyCheckRequest, opts ...grpc.CallOption) (*GetConsistencyCheckReportResponse, error)
 	GetConsistencyCheckReportEntries(ctx context.Context, in *GetConsistencyCheckReportEntriesRequest, opts ...grpc.CallOption) (*GetConsistencyCheckReportEntriesResponse, error)
 	DeleteConsistencyCheckReport(ctx context.Context, in *ConsistencyCheckRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Storage management (experimental)
+	// Adds a new storage configuration at runtime
+	AddStorage(ctx context.Context, in *UpsertStorageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Updates an existing storage configuration at runtime
+	UpdateStorage(ctx context.Context, in *UpsertStorageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Deletes a storage configuration by name
+	DeleteStorage(ctx context.Context, in *DeleteStorageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type chorusClient struct {
@@ -396,6 +406,36 @@ func (c *chorusClient) DeleteConsistencyCheckReport(ctx context.Context, in *Con
 	return out, nil
 }
 
+func (c *chorusClient) AddStorage(ctx context.Context, in *UpsertStorageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Chorus_AddStorage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chorusClient) UpdateStorage(ctx context.Context, in *UpsertStorageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Chorus_UpdateStorage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *chorusClient) DeleteStorage(ctx context.Context, in *DeleteStorageRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Chorus_DeleteStorage_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ChorusServer is the server API for Chorus service.
 // All implementations should embed UnimplementedChorusServer
 // for forward compatibility.
@@ -465,6 +505,13 @@ type ChorusServer interface {
 	GetConsistencyCheckReport(context.Context, *ConsistencyCheckRequest) (*GetConsistencyCheckReportResponse, error)
 	GetConsistencyCheckReportEntries(context.Context, *GetConsistencyCheckReportEntriesRequest) (*GetConsistencyCheckReportEntriesResponse, error)
 	DeleteConsistencyCheckReport(context.Context, *ConsistencyCheckRequest) (*emptypb.Empty, error)
+	// Storage management (experimental)
+	// Adds a new storage configuration at runtime
+	AddStorage(context.Context, *UpsertStorageRequest) (*emptypb.Empty, error)
+	// Updates an existing storage configuration at runtime
+	UpdateStorage(context.Context, *UpsertStorageRequest) (*emptypb.Empty, error)
+	// Deletes a storage configuration by name
+	DeleteStorage(context.Context, *DeleteStorageRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedChorusServer should be embedded to have
@@ -551,6 +598,15 @@ func (UnimplementedChorusServer) GetConsistencyCheckReportEntries(context.Contex
 }
 func (UnimplementedChorusServer) DeleteConsistencyCheckReport(context.Context, *ConsistencyCheckRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteConsistencyCheckReport not implemented")
+}
+func (UnimplementedChorusServer) AddStorage(context.Context, *UpsertStorageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddStorage not implemented")
+}
+func (UnimplementedChorusServer) UpdateStorage(context.Context, *UpsertStorageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateStorage not implemented")
+}
+func (UnimplementedChorusServer) DeleteStorage(context.Context, *DeleteStorageRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteStorage not implemented")
 }
 func (UnimplementedChorusServer) testEmbeddedByValue() {}
 
@@ -1033,6 +1089,60 @@ func _Chorus_DeleteConsistencyCheckReport_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Chorus_AddStorage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertStorageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChorusServer).AddStorage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Chorus_AddStorage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChorusServer).AddStorage(ctx, req.(*UpsertStorageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Chorus_UpdateStorage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertStorageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChorusServer).UpdateStorage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Chorus_UpdateStorage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChorusServer).UpdateStorage(ctx, req.(*UpsertStorageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Chorus_DeleteStorage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteStorageRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChorusServer).DeleteStorage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Chorus_DeleteStorage_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChorusServer).DeleteStorage(ctx, req.(*DeleteStorageRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Chorus_ServiceDesc is the grpc.ServiceDesc for Chorus service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -1139,6 +1249,18 @@ var Chorus_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteConsistencyCheckReport",
 			Handler:    _Chorus_DeleteConsistencyCheckReport_Handler,
+		},
+		{
+			MethodName: "AddStorage",
+			Handler:    _Chorus_AddStorage_Handler,
+		},
+		{
+			MethodName: "UpdateStorage",
+			Handler:    _Chorus_UpdateStorage_Handler,
+		},
+		{
+			MethodName: "DeleteStorage",
+			Handler:    _Chorus_DeleteStorage_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

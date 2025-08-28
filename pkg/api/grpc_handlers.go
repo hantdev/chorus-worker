@@ -1099,3 +1099,155 @@ func (h *handlers) ListReplicationSwitches(ctx context.Context, _ *emptypb.Empty
 	}
 	return &pb.ListSwitchResponse{Switches: res}, nil
 }
+
+// Storage management (experimental)
+// Adds a new storage configuration at runtime
+func (h *handlers) AddStorage(ctx context.Context, req *pb.UpsertStorageRequest) (*emptypb.Empty, error) {
+	if req == nil || req.Name == "" {
+		return nil, fmt.Errorf("%w: storage name is required", dom.ErrInvalidArg)
+	}
+	if _, ok := h.storages.Storages[req.Name]; ok {
+		return nil, fmt.Errorf("%w: storage %q already exists", dom.ErrAlreadyExists, req.Name)
+	}
+	newStor, err := mapUpsertToStorage(req)
+	if err != nil {
+		return nil, err
+	}
+
+	// Apply change
+	old := h.storages.Storages[req.Name]
+	h.storages.Storages[req.Name] = newStor
+	if newStor.IsMain {
+		for n, s := range h.storages.Storages {
+			if n != req.Name && s.IsMain {
+				s.IsMain = false
+				h.storages.Storages[n] = s
+			}
+		}
+	}
+	// Validate whole config
+	if err := h.storages.Init(); err != nil {
+		// revert
+		if old.Address == "" && old.Provider == "" {
+			delete(h.storages.Storages, req.Name)
+		} else {
+			h.storages.Storages[req.Name] = old
+		}
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+// Updates an existing storage configuration at runtime
+func (h *handlers) UpdateStorage(ctx context.Context, req *pb.UpsertStorageRequest) (*emptypb.Empty, error) {
+	if req == nil || req.Name == "" {
+		return nil, fmt.Errorf("%w: storage name is required", dom.ErrInvalidArg)
+	}
+	if _, ok := h.storages.Storages[req.Name]; !ok {
+		return nil, fmt.Errorf("%w: storage %q not found", dom.ErrNotFound, req.Name)
+	}
+	upd, err := mapUpsertToStorage(req)
+	if err != nil {
+		return nil, err
+	}
+	// apply, keep backup
+	backup := h.storages.Storages[req.Name]
+	h.storages.Storages[req.Name] = upd
+	if upd.IsMain {
+		for n, s := range h.storages.Storages {
+			if n != req.Name && s.IsMain {
+				s.IsMain = false
+				h.storages.Storages[n] = s
+			}
+		}
+	}
+	if err := h.storages.Init(); err != nil {
+		// revert
+		h.storages.Storages[req.Name] = backup
+		_ = h.storages.Init()
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+// Deletes a storage configuration by name
+func (h *handlers) DeleteStorage(ctx context.Context, req *pb.DeleteStorageRequest) (*emptypb.Empty, error) {
+	if req == nil || req.Name == "" {
+		return nil, fmt.Errorf("%w: storage name is required", dom.ErrInvalidArg)
+	}
+	if _, ok := h.storages.Storages[req.Name]; !ok {
+		return nil, fmt.Errorf("%w: storage %q not found", dom.ErrNotFound, req.Name)
+	}
+	// prevent deleting current main, as Init requires one main
+	if h.storages.Main() == req.Name {
+		return nil, fmt.Errorf("%w: cannot delete main storage %q", dom.ErrInvalidArg, req.Name)
+	}
+	backup := h.storages.Storages[req.Name]
+	delete(h.storages.Storages, req.Name)
+	if err := h.storages.Init(); err != nil {
+		// revert
+		h.storages.Storages[req.Name] = backup
+		_ = h.storages.Init()
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+// mapUpsertToStorage converts UpsertStorageRequest into runtime s3.Storage
+func mapUpsertToStorage(in *pb.UpsertStorageRequest) (s3.Storage, error) {
+	stor := s3.Storage{
+		Address:             in.Address,
+		Provider:            providerToString(in.Provider),
+		IsMain:              in.IsMain,
+		IsSecure:            in.IsSecure,
+		DefaultRegion:       in.DefaultRegion,
+		RateLimit:           s3.RateLimit{Enabled: in.RateLimit.GetEnable(), RPM: int(in.RateLimit.GetRpm())},
+		Credentials:         map[string]s3.CredentialsV4{},
+		HealthCheckInterval: 0,
+		HttpTimeout:         0,
+	}
+	if in.HealthCheckInterval != "" {
+		dur, err := time.ParseDuration(in.HealthCheckInterval)
+		if err != nil {
+			return s3.Storage{}, fmt.Errorf("%w: invalid health_check_interval: %v", dom.ErrInvalidArg, err)
+		}
+		stor.HealthCheckInterval = dur
+	}
+	if in.HttpTimeout != "" {
+		dur, err := time.ParseDuration(in.HttpTimeout)
+		if err != nil {
+			return s3.Storage{}, fmt.Errorf("%w: invalid http_timeout: %v", dom.ErrInvalidArg, err)
+		}
+		stor.HttpTimeout = dur
+	}
+	for _, c := range in.Credentials {
+		if c.Alias == "" || c.AccessKey == "" || c.SecretKey == "" {
+			return s3.Storage{}, fmt.Errorf("%w: credential alias/access_key/secret_key required", dom.ErrInvalidArg)
+		}
+		stor.Credentials[c.Alias] = s3.CredentialsV4{AccessKeyID: c.AccessKey, SecretAccessKey: c.SecretKey}
+	}
+	return stor, nil
+}
+
+func providerToString(p pb.Storage_Provider) string {
+	switch p {
+	case pb.Storage_Other:
+		return "Other"
+	case pb.Storage_Ceph:
+		return "Ceph"
+	case pb.Storage_Minio:
+		return "Minio"
+	case pb.Storage_AWS:
+		return "AWS"
+	case pb.Storage_GCS:
+		return "GCS"
+	case pb.Storage_Alibaba:
+		return "Alibaba"
+	case pb.Storage_Cloudflare:
+		return "Cloudflare"
+	case pb.Storage_DigitalOcean:
+		return "DigitalOcean"
+	default:
+		return "Other"
+	}
+}
