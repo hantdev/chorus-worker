@@ -1224,6 +1224,19 @@
         }
       }
     },
+    "chorusRateLimitConfig": {
+      "type": "object",
+      "properties": {
+        "enable": {
+          "type": "boolean"
+        },
+        "rpm": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "Experimental storage management messages"
+    },
     "chorusReplication": {
       "type": "object",
       "properties": {
