@@ -1,4 +1,4 @@
-module github.com/clyso/chorus
+module github.com/hantdev/chorus-worker
 
 go 1.24.4
 
